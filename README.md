@@ -8,7 +8,7 @@ A Flutter library to deal with Images XMP data extraction using native implement
 
 ```yaml
 dependencies:
-  flutter_xmp: ^0.0.1
+  flutter_xmp: ^0.0.2
 ```
 
 Import the package:
