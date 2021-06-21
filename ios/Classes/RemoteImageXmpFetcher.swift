@@ -9,7 +9,7 @@
 import Foundation
 
 class RemoteImageXmpFetcher {
-    private static func handleData(data: Data?, completion: @escaping ([String: String]) -> ()) {
+    private static func extractMetadata(data: Data?, completion: @escaping ([String: String]) -> ()) {
         let source = CGImageSourceCreateWithData(data! as CFData, nil)
         let meta = CGImageSourceCopyMetadataAtIndex(source!, 0, nil)
         var metadata: [String: String] = [:]
@@ -18,7 +18,10 @@ class RemoteImageXmpFetcher {
             (key, tag) -> Bool in
             let keyNS = key as NSString
             let keyString = keyNS as String
-            metadata[keyString] = (CGImageMetadataTagCopyValue(tag) as? String)
+            
+            if keyString.starts(with: "xmp") || keyString.starts(with: "GPano") {
+                metadata[keyString] = (CGImageMetadataTagCopyValue(tag) as? String)
+            }
             
             return true
         })
@@ -41,7 +44,7 @@ class RemoteImageXmpFetcher {
         getData(from: URL(string: url)!, completion: {
             (data: Data?, _, error) in
             if let data = data {
-                self.handleData(data: data) {
+                self.extractMetadata(data: data) {
                     metadata in completion(metadata)
                 }
             }

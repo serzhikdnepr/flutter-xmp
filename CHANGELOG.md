@@ -1,3 +1,3 @@
 ## 0.0.1
 
-* TODO: Describe initial release.
+* Implementation of image data extraction from the internet for both: Android & iOS.
