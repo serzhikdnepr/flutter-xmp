@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -14,31 +15,27 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  String _platformVersion = 'Unknown';
+  String _xmpData = "Click the button!";
+  final url = "https://firebasestorage.googleapis.com/v0/b/constructin-15d0f.appspot.com/o/projects%2Fcaptures%2Fd7f2a7f4-a5b3-48f9-bfeb-69747f874d23.jpeg?alt=media&token=5fddf914-8a06-49a1-be67-350bb4ec98c5";
 
   @override
   void initState() {
     super.initState();
-    initPlatformState();
   }
 
-  // Platform messages are asynchronous, so we initialize in an async method.
-  Future<void> initPlatformState() async {
-    String platformVersion;
-    // Platform messages may fail, so we use a try/catch PlatformException.
+  Future<void> getImageXmp() async {
+    String prettyJson;
+
     try {
-      platformVersion = await FlutterXmp.platformVersion;
+      Map<String, dynamic> xmpData = await FlutterXmp.extractXMPFrom(url: url);
+      final encoder = JsonEncoder.withIndent(" ");
+      prettyJson = encoder.convert(xmpData);
     } on PlatformException {
-      platformVersion = 'Failed to get platform version.';
+      prettyJson = "Can't retrieve XMP data.";
     }
 
-    // If the widget was removed from the tree while the asynchronous platform
-    // message was in flight, we want to discard the reply rather than calling
-    // setState to update our non-existent appearance.
-    if (!mounted) return;
-
     setState(() {
-      _platformVersion = platformVersion;
+      _xmpData = prettyJson;
     });
   }
 
@@ -47,10 +44,24 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: const Text('Plugin example app'),
+          title: const Text('Flutter XMP'),
         ),
-        body: Center(
-          child: Text('Running on: $_platformVersion\n'),
+        body: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Image.network(url),
+
+              ElevatedButton(
+                child: Text("Get data!"),
+                onPressed: getImageXmp,
+              ),
+
+              Text(
+                _xmpData
+              )
+            ],
+          ),
         ),
       ),
     );

@@ -9,6 +9,14 @@ public class SwiftFlutterXmpPlugin: NSObject, FlutterPlugin {
   }
 
   public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
-    result("iOS " + UIDevice.current.systemVersion)
+    let args = call.arguments as! [String:String]
+    
+    if (call.method == "extractXmpFromRemote") {
+        RemoteImageXmpFetcher.fetch(url: args["url"]!, completion: {
+            metadata in result(metadata)
+        })
+    } else {
+        result(FlutterMethodNotImplemented)
+    }
   }
 }
