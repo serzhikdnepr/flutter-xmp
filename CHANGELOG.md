@@ -1,3 +1,7 @@
+## 1.0.0
+
+* Production version update
+
 ## 0.0.2
 
 * Code docs improvements.
