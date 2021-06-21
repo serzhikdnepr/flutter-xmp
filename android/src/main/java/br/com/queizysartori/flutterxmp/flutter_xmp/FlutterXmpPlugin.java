@@ -1,6 +1,10 @@
 package br.com.queizysartori.flutterxmp.flutter_xmp;
 
+import android.content.Context;
+
 import androidx.annotation.NonNull;
+
+import java.util.Map;
 
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.plugin.common.MethodCall;
@@ -11,22 +15,30 @@ import io.flutter.plugin.common.PluginRegistry.Registrar;
 
 /** FlutterXmpPlugin */
 public class FlutterXmpPlugin implements FlutterPlugin, MethodCallHandler {
-  /// The MethodChannel that will the communication between Flutter and native Android
-  ///
-  /// This local reference serves to register the plugin with the Flutter Engine and unregister it
-  /// when the Flutter Engine is detached from the Activity
   private MethodChannel channel;
+
+  private Context mContext;
 
   @Override
   public void onAttachedToEngine(@NonNull FlutterPluginBinding flutterPluginBinding) {
+    mContext = flutterPluginBinding.getApplicationContext();
     channel = new MethodChannel(flutterPluginBinding.getBinaryMessenger(), "flutter_xmp");
     channel.setMethodCallHandler(this);
   }
 
   @Override
-  public void onMethodCall(@NonNull MethodCall call, @NonNull Result result) {
-    if (call.method.equals("getPlatformVersion")) {
-      result.success("Android " + android.os.Build.VERSION.RELEASE);
+  public void onMethodCall(@NonNull MethodCall call, @NonNull final Result result) {
+    if (call.method.equals("extractXmpFromRemote")) {
+      RemoteImageXmpFetcher.fetch(
+              call.<String>argument("url"),
+              mContext,
+              new MetadataCallbackImp() {
+                @Override
+                public void onSuccess(Map<String, String> metadata) {
+                  result.success(metadata);
+                }
+              }
+      );
     } else {
       result.notImplemented();
     }
