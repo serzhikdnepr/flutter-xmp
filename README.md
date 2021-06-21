@@ -2,7 +2,7 @@
 
 A Flutter library to deal with Images XMP data extraction using native implementation for both Android and iOS.
 
-[![pub package](https://img.shields.io/badge/pub-0.0.1-blue)](https://pub.dev/packages/flutter_xmp)
+[![pub package](https://img.shields.io/badge/pub-0.0.2-blue)](https://pub.dev/packages/flutter_xmp)
 
 ## Getting Started
 
