@@ -21,7 +21,14 @@ Use the `extractXMPFrom` static method and you're done!
 Map<String, dynamic> xmpData = await FlutterXmp.extractXMPFrom(url: "https://images.com/my-awesome-image.jpg");
 ```
 
-Obs: For now the package only works with remote images. 
+Obs: For now the package works only with remote images. 
+
+## Screeshots
+
+![Android Screenshot](https://user-images.githubusercontent.com/35772322/122821699-89ee3200-d2b3-11eb-8c29-27d19bf6fdcf.png)
+
+![iOS Screenshot](https://user-images.githubusercontent.com/35772322/122821711-8eb2e600-d2b3-11eb-958b-09f89ff7c062.png)
+
 
 ## Next steps:
 
