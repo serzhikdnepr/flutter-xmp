@@ -1,4 +1,4 @@
-# flutter_xmp
+# Flutter XMP
 
 A Flutter library to deal with Images XMP data extraction using native implementation for both Android and iOS.
 
@@ -23,7 +23,8 @@ Map<String, dynamic> xmpData = await FlutterXmp.extractXMPFrom(url: "https://ima
 
 Obs: For now the package only works with remote images. 
 
-Next steps:
-[x] Extract XMP info from remote images
-[ ] Extract XMP info from local images
+## Next steps:
+
+- [x] Extract XMP info from remote images
+- [ ] Extract XMP info from local images
   
