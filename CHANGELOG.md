@@ -1,3 +1,7 @@
+## 1.0.1
+
+* Added image data as a return parameter
+
 ## 1.0.0
 
 * Production version update
