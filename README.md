@@ -2,13 +2,13 @@
 
 A Flutter library to deal with Images XMP data extraction using native implementation for both Android and iOS.
 
-[![pub package](https://img.shields.io/badge/pub-1.0.0-blue)](https://pub.dev/packages/flutter_xmp)
+[![pub package](https://img.shields.io/badge/pub-1.0.1-blue)](https://pub.dev/packages/flutter_xmp)
 
 ## Getting Started
 
 ```yaml
 dependencies:
-  flutter_xmp: ^1.0.0
+  flutter_xmp: ^1.0.1
 ```
 
 Import the package:
@@ -20,7 +20,9 @@ import 'package:flutter_xmp/flutter_xmp.dart';
 Use the `extractXMPFrom` static method and you're done!
 
 ```dart
-Map<String, dynamic> xmpData = await FlutterXmp.extractXMPFrom(url: "https://images.com/my-awesome-image.jpg");
+Map<String, dynamic> result = await FlutterXmp.extractXMPFrom(url: "https://images.com/my-awesome-image.jpg");
+Map xmpData = result["metadata"]; // A Map containing the extracted XMP data
+List<int> imageData = result["image_data"]; // A ByteArray containing the image data
 ```
 
 Obs: For now the package works only with remote images. 

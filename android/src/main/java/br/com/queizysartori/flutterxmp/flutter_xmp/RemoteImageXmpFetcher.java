@@ -19,18 +19,36 @@ import com.drew.metadata.Metadata;
 import com.drew.metadata.Tag;
 import com.drew.metadata.xmp.XmpDirectory;
 
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.nio.IntBuffer;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+class XmpResult {
+    byte[] imageData;
+    Map<String, String> metadata;
+
+    Map toMap() {
+       HashMap map = new HashMap();
+       map.put("image_data", imageData);
+       map.put("metadata", metadata);
+
+       return map;
+    }
+}
+
 interface MetadataCallback {
-    void onSuccess(Map<String, String> metadata);
+    void onSuccess(XmpResult result);
 }
 
 class MetadataCallbackImp implements MetadataCallback {
     @Override
-    public void onSuccess(Map<String, String> metadata) {
+    public void onSuccess(XmpResult result) {
 
     }
 }
@@ -51,10 +69,12 @@ public class RemoteImageXmpFetcher  {
         });
     }
 
-    private static Map<String, String> readImageMetadata(File file) {
-        Map<String, String> xmpData = new HashMap<String, String>();
+    private static XmpResult readImageMetadata(File file) {
+        XmpResult result = new XmpResult();
 
         try {
+            Map<String, String> metadataMap = new HashMap();
+
             Metadata metadata = ImageMetadataReader.readMetadata(file);
             
             for (XmpDirectory xmpDirectory : metadata.getDirectoriesOfType(XmpDirectory.class)) {
@@ -63,14 +83,25 @@ public class RemoteImageXmpFetcher  {
                 while (itr.hasNext()) {
                     XMPPropertyInfo property = (XMPPropertyInfo) itr.next();
                     if (property.getPath() != null) {
-                        xmpData.put(property.getPath(), property.getValue());
+                        metadataMap.put(property.getPath(), property.getValue());
                     }
                 }
             }
+
+            result.metadata = metadataMap;
+
+            int size = (int) file.length();
+            byte[] bytes = new byte[size];
+
+            BufferedInputStream buf = new BufferedInputStream(new FileInputStream(file));
+            buf.read(bytes, 0, bytes.length);
+            buf.close();
+
+            result.imageData = bytes;
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        return xmpData;
+        return result;
     }
 }

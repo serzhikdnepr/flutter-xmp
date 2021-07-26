@@ -10,7 +10,7 @@ enum UrlType { local, remote }
 class FlutterXmp {
   static const MethodChannel _channel = const MethodChannel('flutter_xmp');
 
-  /// Returns a [Map] with the extracted XMP data from a given URL.
+  /// Returns a [Map] with the extracted XMP data and Image data from a given URL.
   /// The data extraction is made on the native side.
   ///
   /// Obs: Currently supports only [UrlType.remote].
@@ -18,13 +18,14 @@ class FlutterXmp {
       {required String url, UrlType type = UrlType.remote}) async {
     try {
       if (type == UrlType.remote) {
-        final xmpData =
-            await _channel.invokeMethod("extractXmpFromRemote", {"url": url});
+        final xmpData = await _channel.invokeMethod("extractXmpFromRemote", {
+          "url": url
+        });
 
         return Map<String, dynamic>.from(xmpData);
       }
 
-      throw (UnimplementedError());
+      throw UnimplementedError();
     } catch (e, stack) {
       print(e);
       print(stack);

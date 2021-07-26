@@ -16,6 +16,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   String _xmpData = "Click the button!";
+  List<int> _imageData;
   final url = "ADD-YOUR-URL-HERE";
 
   @override
@@ -25,17 +26,21 @@ class _MyAppState extends State<MyApp> {
 
   Future<void> getImageXmp() async {
     String prettyJson;
+    Map<String, dynamic> xmpData;
 
     try {
-      Map<String, dynamic> xmpData = await FlutterXmp.extractXMPFrom(url: url);
+      xmpData = await FlutterXmp.extractXMPFrom(url: url);
       final encoder = JsonEncoder.withIndent(" ");
-      prettyJson = encoder.convert(xmpData);
+
+      prettyJson = encoder.convert(xmpData["metadata"]);
+
     } on PlatformException {
       prettyJson = "Can't retrieve XMP data.";
     }
 
     setState(() {
       _xmpData = prettyJson;
+      _imageData = xmpData["image_data"];
     });
   }
 
@@ -50,7 +55,7 @@ class _MyAppState extends State<MyApp> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Image.network(url),
+              _imageData != null ? Image.memory(_imageData) : Container(),
               ElevatedButton(
                 child: Text("Get data!"),
                 onPressed: getImageXmp,

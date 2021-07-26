@@ -40,12 +40,12 @@ class RemoteImageXmpFetcher {
         }).resume()
     }
     
-    public static func fetch(url: String, completion: @escaping ([String:String]) -> ()) {
+    public static func fetch(url: String, completion: @escaping ([String:Any]) -> ()) {
         getData(from: URL(string: url)!, completion: {
             (data: Data?, _, error) in
             if let data = data {
                 self.extractMetadata(data: data) {
-                    metadata in completion(metadata)
+                    metadata in completion(["metadata": metadata, "image_data": data])
                 }
             }
             
