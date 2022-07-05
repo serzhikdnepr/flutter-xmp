@@ -54,7 +54,7 @@ class MetadataCallbackImp implements MetadataCallback {
 }
 
 public class RemoteImageXmpFetcher  {
-    public static void fetch(String url, Context context, final MetadataCallback callback) {
+    public static void fetchRemote(String url, Context context, final MetadataCallback callback) {
         Glide.with(context)
         .asFile()
         .load(url)
@@ -68,7 +68,10 @@ public class RemoteImageXmpFetcher  {
             public void onLoadCleared(@Nullable Drawable placeholder) { }
         });
     }
-
+    public static void fetchLocale(String url, Context context, final MetadataCallback callback) {
+       File file = new File(url);
+        callback.onSuccess(readImageMetadata(file));
+    }
     private static XmpResult readImageMetadata(File file) {
         XmpResult result = new XmpResult();
 

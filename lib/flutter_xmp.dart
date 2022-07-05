@@ -33,4 +33,24 @@ class FlutterXmp {
       throw (e);
     }
   }
+
+  static Future<Map<String, dynamic>> extractXMPFromLocale(
+      {required String url, UrlType type = UrlType.remote}) async {
+    try {
+      if (type == UrlType.remote) {
+        final xmpData = await _channel.invokeMethod("extractXmpFromLocale", {
+          "url": url
+        });
+
+        return Map<String, dynamic>.from(xmpData);
+      }
+
+      throw UnimplementedError();
+    } catch (e, stack) {
+      print(e);
+      print(stack);
+
+      throw (e);
+    }
+  }
 }

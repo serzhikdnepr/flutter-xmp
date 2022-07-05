@@ -28,7 +28,7 @@ public class FlutterXmpPlugin implements FlutterPlugin, MethodCallHandler {
   @Override
   public void onMethodCall(@NonNull MethodCall call, @NonNull final Result result) {
     if (call.method.equals("extractXmpFromRemote")) {
-      RemoteImageXmpFetcher.fetch(
+      RemoteImageXmpFetcher.fetchRemote(
         call.<String>argument("url"),
         mContext,
         new MetadataCallbackImp() {
@@ -37,6 +37,17 @@ public class FlutterXmpPlugin implements FlutterPlugin, MethodCallHandler {
             result.success(xmpResult.toMap());
           }
         }
+      );
+    }else if (call.method.equals("extractXmpFromLocale")) {
+      RemoteImageXmpFetcher.fetchLocale(
+              call.<String>argument("url"),
+              mContext,
+              new MetadataCallbackImp() {
+                @Override
+                public void onSuccess(XmpResult xmpResult) {
+                  result.success(xmpResult.toMap());
+                }
+              }
       );
     } else {
       result.notImplemented();

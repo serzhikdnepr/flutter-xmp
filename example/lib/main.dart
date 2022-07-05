@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -16,7 +17,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   String _xmpData = "Click the button!";
-  List<int> _imageData;
+  List<int>? _imageData;
   final url = "ADD-YOUR-URL-HERE";
 
   @override
@@ -26,7 +27,7 @@ class _MyAppState extends State<MyApp> {
 
   Future<void> getImageXmp() async {
     String prettyJson;
-    Map<String, dynamic> xmpData;
+    Map<String, dynamic>? xmpData;
 
     try {
       xmpData = await FlutterXmp.extractXMPFrom(url: url);
@@ -40,7 +41,7 @@ class _MyAppState extends State<MyApp> {
 
     setState(() {
       _xmpData = prettyJson;
-      _imageData = xmpData["image_data"];
+      _imageData = xmpData!["image_data"];
     });
   }
 
@@ -55,9 +56,12 @@ class _MyAppState extends State<MyApp> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              _imageData != null ? Image.memory(_imageData) : Container(),
+              _imageData != null ? Image.memory(Uint8List.fromList(_imageData!)) : Container(),
               ElevatedButton(
                 child: Text("Get data!"),
+                onPressed: getImageXmp,
+              ),ElevatedButton(
+                child: Text("Get Locale!"),
                 onPressed: getImageXmp,
               ),
               Text(_xmpData)
